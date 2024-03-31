@@ -3,17 +3,22 @@ package autograde.igu.component;
 import autograde.igu.swing.Button;
 import autograde.igu.swing.MyPasswordField;
 import autograde.igu.swing.MyTextField;
+import autograde.logica.Conex;
+import com.mysql.jdbc.Connection;
+import com.mysql.jdbc.PreparedStatement;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import java.sql.ResultSet;
 import net.miginfocom.swing.MigLayout;
 
-public class PanelLoginAndRegister extends javax.swing.JLayeredPane implements ActionListener {
+public class PanelLoginAndRegister extends javax.swing.JLayeredPane{
+        Conex con = new Conex();
+        Connection cn = con.conectarBD();
 
     public PanelLoginAndRegister() {
         initComponents();
@@ -42,12 +47,46 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane implements A
         txtPass.setPrefixIcon(new ImageIcon(getClass().getResource("/autograde/igu/icon/pass.png")));
         txtPass.setHint("Password");
         register.add(txtPass, "w 60%");
-        JButton cmd = new JButton();
-        cmd.setBackground(new Color(7, 164, 121));
-        cmd.setForeground(new Color(250, 250, 250));
-        cmd.setText("SIGN UP");
-        cmd.addActionListener(this);
-        register.add(cmd, "w 40%, h 40");
+        JButton cmdSignUp = new JButton();
+        cmdSignUp.setBackground(new Color(7, 164, 121));
+        cmdSignUp.setForeground(new Color(250, 250, 250));
+        cmdSignUp.setText("SIGN UP");
+        cmdSignUp.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                String nombre = txtUser.getText();
+                String email = txtEmail.getText();
+                String contraseña = txtPass.getText();
+                // Validar que los campos no estén vacíos
+                if(nombre.isEmpty() || email.isEmpty() || contraseña.isEmpty()) {
+                    JOptionPane.showMessageDialog(null,"Por favor completar datos");
+                } else {
+                    try {
+                        // Verificar si el correo o el nombre de usuario ya están registrados
+                        PreparedStatement ps = (PreparedStatement) cn.prepareStatement("SELECT * FROM usuarios WHERE Correo=? OR Nombre=?");
+                        ps.setString(1, email);
+                        ps.setString(2, nombre);
+                        ResultSet rs = ps.executeQuery();
+                        if(rs.next()) {
+                            // Ya existe un usuario con ese correo o nombre
+                            JOptionPane.showMessageDialog(null, "Correo o nombre de usuario ya registrados");
+                        } else {
+                            // No existe, se puede proceder con el registro
+                            String consulta = "INSERT into usuarios(Nombre,Correo,Contraseña) values('" + nombre + "','" + email + "','" + contraseña + "')";
+                            ps = (PreparedStatement) cn.prepareStatement(consulta);
+                            ps.executeUpdate();
+                            JOptionPane.showMessageDialog(null,"Datos registrados correctamente");
+                            txtUser.setText("");
+                            txtEmail.setText("");
+                            txtPass.setText("");
+                        }
+                    } catch(Exception e) {
+                        JOptionPane.showMessageDialog(null, "Error al registrar los datos" + e);
+                    }
+                }
+            }
+        });
+        register.add(cmdSignUp, "w 40%, h 40");
+        
     }
     
     private void initLogin() {
@@ -70,12 +109,48 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane implements A
         cmdForget.setContentAreaFilled(false);
         cmdForget.setCursor(new Cursor(Cursor.HAND_CURSOR));
         login.add(cmdForget);
-        Button cmd = new Button();
-        cmd.setBackground(new Color(7, 164, 121));
-        cmd.setForeground(new Color(250, 250, 250));
-        cmd.setText("SIGN IN");
-        login.add(cmd, "w 40%, h 40");
+        Button cmdSignIn = new Button();
+        cmdSignIn.setBackground(new Color(7, 164, 121));
+        cmdSignIn.setForeground(new Color(250, 250, 250));
+        cmdSignIn.setText("SIGN IN");
+        
+       cmdSignIn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                String usuario = txtEmail.getText();
+                String pass = txtPass.getText();
+                // Validar que los campos no estén vacíos
+                if(!usuario.equals("") && !pass.equals("")) {
+                // Aquí puedes agregar la lógica para verificar las credenciales del usuario
+                    try {
+                    // Verificar las credenciales en la base de datos o donde sea que las tengas almacenadas
+                        PreparedStatement ps = (PreparedStatement) cn.prepareStatement("SELECT * FROM usuarios WHERE Correo=? AND Contraseña=?");
+                        ps.setString(1, usuario);
+                        ps.setString(2, pass);
+                        ResultSet rs = ps.executeQuery();
+                            if(rs.next()) {
+                            // Credenciales válidas, hacer algo (por ejemplo, abrir una nueva ventana)
+                            // Aquí puedes abrir la nueva ventana o realizar alguna otra acción
+                            JOptionPane.showMessageDialog(null, "Credenciales válidas");
+                            txtEmail.setText("");
+                            txtPass.setText("");
+                            } else {
+                            // Credenciales inválidas, mostrar mensaje de error
+                                JOptionPane.showMessageDialog(null, "Usuario o contraseña incorrectos");
+                            }
+                    } catch (Exception e) {
+                        JOptionPane.showMessageDialog(null, "Error al verificar las credenciales");
+                    }
+                } else {
+                     // Mostrar mensaje si faltan datos
+                    JOptionPane.showMessageDialog(null, "Por favor completar los campos");
+                }
+            }
+        });
+        login.add(cmdSignIn, "w 40%, h 40");
     }
+    
+
+  
 
     public void showRegister(boolean show) {
         if (show) {
@@ -132,8 +207,6 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane implements A
     private javax.swing.JPanel register;
     // End of variables declaration//GEN-END:variables
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        System.out.println("puto");
-    }
+ 
 }
+

@@ -2,14 +2,11 @@ package autograde.igu;
 
 import autograde.igu.component.PanelCover;
 import autograde.igu.component.PanelLoginAndRegister;
-import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
 import net.miginfocom.swing.MigLayout;
 import org.jdesktop.animation.timing.Animator;
 import org.jdesktop.animation.timing.TimingTarget;

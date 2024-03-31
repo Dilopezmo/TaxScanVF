@@ -14,7 +14,7 @@ import java.util.Locale;
 import javax.swing.JLabel;
 import net.miginfocom.swing.MigLayout;
 
-public class PanelCover extends javax.swing.JPanel {
+public class PanelCover extends javax.swing.JPanel implements ActionListener {
 
     private final DecimalFormat df = new DecimalFormat("##0.###", DecimalFormatSymbols.getInstance(Locale.US));
     private ActionListener event;
@@ -57,6 +57,12 @@ public class PanelCover extends javax.swing.JPanel {
         });
         add(button, "w 60%, h 40");
     }
+    @Override
+    public void actionPerformed (ActionEvent e){
+         System.out.println("Pulsado");
+   }
+    
+    
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -135,6 +141,7 @@ public class PanelCover extends javax.swing.JPanel {
             this.isLogin = login;
         }
     }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables

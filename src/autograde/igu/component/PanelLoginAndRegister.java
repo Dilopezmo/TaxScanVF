@@ -6,12 +6,14 @@ import autograde.igu.swing.MyTextField;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import net.miginfocom.swing.MigLayout;
 
-public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
+public class PanelLoginAndRegister extends javax.swing.JLayeredPane implements ActionListener {
 
     public PanelLoginAndRegister() {
         initComponents();
@@ -40,13 +42,14 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
         txtPass.setPrefixIcon(new ImageIcon(getClass().getResource("/autograde/igu/icon/pass.png")));
         txtPass.setHint("Password");
         register.add(txtPass, "w 60%");
-        Button cmd = new Button();
+        JButton cmd = new JButton();
         cmd.setBackground(new Color(7, 164, 121));
         cmd.setForeground(new Color(250, 250, 250));
         cmd.setText("SIGN UP");
+        cmd.addActionListener(this);
         register.add(cmd, "w 40%, h 40");
     }
-
+    
     private void initLogin() {
         login.setLayout(new MigLayout("wrap", "push[center]push", "push[]25[]10[]10[]25[]push"));
         JLabel label = new JLabel("Sign In");
@@ -128,4 +131,9 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
     private javax.swing.JPanel login;
     private javax.swing.JPanel register;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        System.out.println("puto");
+    }
 }

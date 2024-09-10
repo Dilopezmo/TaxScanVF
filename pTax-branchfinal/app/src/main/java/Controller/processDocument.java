@@ -50,7 +50,7 @@ public class processDocument {
             try {
                 File pdfFile = null;
                 //Se cargan las credenciales de la cuenta de servicio mediante un archivo .json
-                InputStream credentialsStream = context.getAssets().open("organic-edge-430816-h1-84b996ad0bef.json");
+                InputStream credentialsStream = context.getAssets().open("organic-edge-430816-h1-8cd71ed69160.json");
                 GoogleCredentials credentials = GoogleCredentials.
                         fromStream(credentialsStream).createScoped("https://www.googleapis.com/auth/cloud-platform");
                 Log.i("depuracion", "credenciales obtenidas");
